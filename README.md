@@ -1,163 +1,249 @@
 # ARQUITECTURA ORIENTADA A SERVICIOS 
 ## Curso 2025-26 
-## FastAPI Project
+## FastAPI Project - Sistema de Rutinas Deportivas
 
+# Sistema de Gestión de Rutinas Deportivas
 
-# FastAPI Project
+Este es un sistema completo de gestión de fitness desarrollado con FastAPI que incluye funcionalidades CRUD completas para:
+- **Ejercicios**: Gestión de ejercicios con clasificación por tipo, dificultad y grupos musculares
+- **Rutinas de Entrenamiento**: Creación y gestión de rutinas personalizadas
+- **Usuarios**: Registro y seguimiento de usuarios del sistema
+- **Sesiones de Entrenamiento**: Inicio, seguimiento y finalización de workouts
+- **Seguimiento de Progreso**: Registro de mejoras y récords personales
+- **Analytics**: Estadísticas automáticas de usuarios y ejercicios
 
-This is a simple FastAPI-based project that includes GET and POST services. It includes:
-- A POST endpoint for processing JSON data.
-- A GET endpoint for concatenating two strings.
-- A GET endpoint for calculating the length of a string.
-
-## Project Structure
+## Estructura del Proyecto
 
 ```bash
 aossample/
 │
 ├── app/
-│   ├── __init__.py           # Initializes the app as a package
-│   ├── main.py               # Main entry point for the FastAPI application
+│   ├── __init__.py           # Inicializa la aplicación como paquete
+│   ├── main.py               # Punto de entrada principal de la aplicación FastAPI
 │   ├── routes/
-│   │   ├── __init__.py       # Initializes the routes as a package
-│   │   └── sample.py         # Contains the API routes (POST/GET)
+│   │   ├── __init__.py       # Inicializa las rutas como paquete
+│   │   └── sample.py         # Contiene todas las rutas de la API de fitness
 │   ├── models/
 │   │   ├── __init__.py       
-│   │   └── item.py           # Defines the data models using Pydantic
-│   ├── tests/
+│   │   └── item.py           # Define los modelos de datos usando Pydantic
+│   ├── test/
 │   │   ├── __init__.py       
-│   │   └── test_sample.py    # Contains the unit tests for the API
-│   └── requirements.txt      # Dependencies for the project
+│   │   └── test_sample.py    # Contiene las pruebas unitarias para la API
+│   └── requirements.txt      # Dependencias del proyecto
 │
-├── venv/                     # Python virtual environment
-└── README.md                 # Project documentation
+├── venv/                     # Entorno virtual de Python
+├── README.md                 # Documentación del proyecto
+├── CAMBIOS_REALIZADOS.md     # Documentación de cambios implementados
+└── GUIA_EJECUCION_RAPIDA.md  # Guía de ejecución rápida
 ```
 
-## Project Setup
+## Configuración del Proyecto
 
-### 1. **Clone the Project**
+### 1. **Clonar el Proyecto**
 
-First, clone the project repository to your local machine:
+Primero, clona el repositorio del proyecto en tu máquina local:
 
 ```bash
 git clone https://github.com/mcastrol/aossample.git
 cd aossample
 ```
 
-### 2. **Create and Activate a Python Virtual Environment**
+### 2. **Crear y Activar un Entorno Virtual de Python**
 
-Create a virtual environment to manage dependencies. This ensures that project-specific packages are isolated from your global Python environment.
+Crea un entorno virtual para gestionar las dependencias. Esto asegura que los paquetes específicos del proyecto estén aislados de tu entorno global de Python.
 
-**On Linux/macOS**:
+**En Linux/macOS**:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-**On Windows**:
+**En Windows**:
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-### 3. **Install Dependencies from `requirements.txt`**
+### 3. **Instalar Dependencias desde `requirements.txt`**
 
-Once the virtual environment is activated, install the project dependencies using `requirements.txt`.
+Una vez que el entorno virtual esté activado, instala las dependencias del proyecto usando `requirements.txt`.
 
 ```bash
 pip install -r app/requirements.txt
 ```
 
-This will install all the necessary packages such as FastAPI, Uvicorn, and Pytest.
+Esto instalará todos los paquetes necesarios como FastAPI, Uvicorn y Pytest.
 
-### 4. **Run the FastAPI Application**
+### 4. **Ejecutar la Aplicación FastAPI**
 
-To run the FastAPI application, use the following command:
+Para ejecutar la aplicación FastAPI, usa el siguiente comando:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The `--reload` option is useful in development mode because it reloads the app when changes are made to the code.
+La opción `--reload` es útil en modo de desarrollo porque recarga la aplicación cuando se hacen cambios en el código.
 
-By default, the app will be available at `http://127.0.0.1:8000`. You can access the API documentation via:
+Por defecto, la aplicación estará disponible en `http://127.0.0.1:8000`. Puedes acceder a la documentación de la API a través de:
 - **Swagger UI**: `http://127.0.0.1:8000/docs`
 - **ReDoc**: `http://127.0.0.1:8000/redoc`
 
-### 5. **Testing the API with `pytest`**
+### 5. **Probar la API con `pytest`**
 
-Unit tests for the API are included in the `app/tests/test_sample.py` file. You can run the tests using `pytest`.
+Las pruebas unitarias para la API están incluidas en el archivo `app/test/test_sample.py`. Puedes ejecutar las pruebas usando `pytest`.
 
-To run the tests, simply execute:
+Para ejecutar las pruebas, simplemente ejecuta:
 
 ```bash
 python -m pytest
 ```
 
-### API Endpoints
+## Endpoints de la API
 
-#### POST `/process`
-- **Description**: Accepts a JSON object with two integers and returns their sum.
+### 🏋️ **Ejercicios**
+
+#### POST `/exercises`
+- **Descripción**: Crea un nuevo ejercicio con clasificación completa
 - **Request Body**:
   ```json
   {
-    "value1": 10,
-    "value2": 5
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "result": 15
+    "name": "Push-ups",
+    "description": "Classic bodyweight exercise",
+    "exercise_type": "strength",
+    "difficulty": "beginner",
+    "muscle_groups": ["chest", "arms"],
+    "duration_minutes": 5,
+    "calories_burned_per_minute": 8,
+    "equipment_needed": [],
+    "instructions": ["Start in plank position", "Lower body to ground", "Push back up"]
   }
   ```
 
-#### GET `/concat`
-- **Description**: Concatenates two query parameters.
+#### GET `/exercises`
+- **Descripción**: Obtiene todos los ejercicios con filtros opcionales
 - **Query Parameters**:
-  - `param1`: First string to concatenate.
-  - `param2`: Second string to concatenate.
-- **Example Request**:
-  ```
-  GET /concat?param1=Hello&param2=World
-  ```
-- **Response**:
+  - `exercise_type`: cardio, strength, flexibility, balance, sports
+  - `difficulty`: beginner, intermediate, advanced
+  - `muscle_group`: chest, back, shoulders, arms, legs, core, full_body
+
+#### GET `/exercises/{exercise_id}`
+- **Descripción**: Obtiene un ejercicio específico por ID
+
+### 🏃 **Rutinas de Entrenamiento**
+
+#### POST `/routines`
+- **Descripción**: Crea una nueva rutina de entrenamiento
+- **Request Body**:
   ```json
   {
-    "result": "HelloWorld"
+    "name": "Beginner Full Body",
+    "description": "Complete workout for beginners",
+    "difficulty": "beginner",
+    "target_muscle_groups": ["legs", "core"],
+    "estimated_duration_minutes": 30,
+    "exercises": [
+      {"exercise_id": 1, "sets": 3, "reps": 15, "rest_seconds": 60}
+    ]
   }
   ```
 
-#### GET `/length`
-- **Description**: Returns the length of a given string.
-- **Query Parameter**:
-  - `string`: The string whose length is to be calculated.
-- **Example Request**:
-  ```
-  GET /length?string=FastAPI
-  ```
-- **Response**:
+#### GET `/routines`
+- **Descripción**: Obtiene todas las rutinas con filtros opcionales
+
+### 👤 **Usuarios**
+
+#### POST `/users`
+- **Descripción**: Registra un nuevo usuario
+- **Request Body**:
   ```json
   {
-    "length": 7
+    "username": "john_doe",
+    "email": "john@example.com",
+    "age": 25,
+    "weight_kg": 70.0,
+    "height_cm": 175.0,
+    "fitness_level": "beginner",
+    "goals": ["lose_weight", "build_muscle"]
   }
   ```
 
-### 6. **Generate `requirements.txt`**
+### 🏋️ **Sesiones de Entrenamiento**
 
-To generate a `requirements.txt` file after adding new dependencies, run the following command:
+#### POST `/sessions`
+- **Descripción**: Inicia una nueva sesión de entrenamiento
+- **Request Body**:
+  ```json
+  {
+    "user_id": 1,
+    "routine_id": 1,
+    "started_at": "2024-01-15T10:00:00"
+  }
+  ```
+
+#### PATCH `/sessions/{session_id}`
+- **Descripción**: Completa o actualiza una sesión de entrenamiento
+
+### 📈 **Progreso del Usuario**
+
+#### POST `/progress`
+- **Descripción**: Registra el progreso del usuario en un ejercicio
+- **Request Body**:
+  ```json
+  {
+    "user_id": 1,
+    "exercise_id": 1,
+    "weight_kg": 50.0,
+    "reps": 10,
+    "sets": 3,
+    "personal_record": true
+  }
+  ```
+
+### 📊 **Analytics y Estadísticas**
+
+#### GET `/stats/user/{user_id}`
+- **Descripción**: Obtiene estadísticas completas de un usuario
+
+#### GET `/stats/exercise/{exercise_id}`
+- **Descripción**: Obtiene estadísticas de uso de un ejercicio
+
+## Características Principales
+
+### ✅ **Funcionalidades Implementadas**
+- **CRUD Completo**: Create, Read, Update, Delete para todas las entidades
+- **Validación Robusta**: Validación automática de datos con Pydantic
+- **Filtros Avanzados**: Búsqueda por tipo, dificultad, grupo muscular
+- **Analytics Automáticos**: Estadísticas de usuarios y ejercicios
+- **Seguimiento de Progreso**: Registro de mejoras y récords personales
+- **API RESTful**: Endpoints bien estructurados y documentados
+
+### 🧪 **Testing**
+- **30+ Pruebas**: Cobertura completa de todas las funcionalidades
+- **Pruebas de Casos Edge**: Validación de errores y casos límite
+- **Pruebas de Relaciones**: Validación de relaciones entre entidades
+
+### 📚 **Documentación**
+- **Swagger UI**: Documentación interactiva en `/docs`
+- **ReDoc**: Documentación alternativa en `/redoc`
+- **Guías Completas**: Documentación de cambios y guía de ejecución
+
+## Comandos Útiles
+
+### Generar `requirements.txt`
+Para generar un archivo `requirements.txt` después de agregar nuevas dependencias:
 
 ```bash
 pip freeze > app/requirements.txt
 ```
 
-This will capture the current list of installed packages into the `requirements.txt` file.
+### Ejecutar Pruebas Específicas
+```bash
+# Todas las pruebas
+python -m pytest app/test/test_sample.py -v
+
+# Pruebas específicas
+python -m pytest app/test/test_sample.py::test_create_exercise -v
+```
 
 ---
 
-### Notes
-
-- The `app/routes/sample.py` file contains all the route handlers for GET and POST methods.
-- The tests are written using `pytest`, and they can be found in `app/tests/test_sample.py`.
-
-For any issues or contributions, please feel free to open a pull request or an issue.
