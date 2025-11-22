@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Rutinas Deportivas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏋️ Sistema de Gestión de Rutinas Deportivas</h1>
+            <p class="subtitle">Interfaz gráfica para la API de Fitness</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="exercises">Ejercicios</button>
+            <button class="tab-button" data-tab="routines">Rutinas</button>
+            <button class="tab-button" data-tab="users">Usuarios</button>
+            <button class="tab-button" data-tab="sessions">Sesiones</button>
+            <button class="tab-button" data-tab="progress">Progreso</button>
+        </nav>
+
+        <!-- Sección de Ejercicios -->
+        <section id="exercises" class="tab-content active">
+            <div class="section-header">
+                <h2>🏋️ Gestión de Ejercicios</h2>
+                <button class="btn btn-primary" onclick="showExerciseForm()">➕ Nuevo Ejercicio</button>
+            </div>
+
+            <!-- Formulario de Ejercicio -->
+            <div id="exercise-form" class="form-container" style="display: none;">
+                <h3 id="exercise-form-title">Crear Nuevo Ejercicio</h3>
+                <form id="exercise-form-element" onsubmit="handleExerciseSubmit(event)">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" id="exercise-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción:</label>
+                        <textarea id="exercise-description" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tipo:</label>
+                            <select id="exercise-type" required>
+                                <option value="strength">Fuerza</option>
+                                <option value="cardio">Cardio</option>
+                                <option value="flexibility">Flexibilidad</option>
+                                <option value="balance">Equilibrio</option>
+                                <option value="sports">Deportes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dificultad:</label>
+                            <select id="exercise-difficulty" required>
+                                <option value="beginner">Principiante</option>
+                                <option value="intermediate">Intermedio</option>
+                                <option value="advanced">Avanzado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Grupos Musculares (selecciona múltiples):</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" value="chest"> Pecho</label>
+                            <label><input type="checkbox" value="back"> Espalda</label>
+                            <label><input type="checkbox" value="shoulders"> Hombros</label>
+                            <label><input type="checkbox" value="arms"> Brazos</label>
+                            <label><input type="checkbox" value="legs"> Piernas</label>
+                            <label><input type="checkbox" value="core"> Core</label>
+                            <label><input type="checkbox" value="full_body"> Cuerpo Completo</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Duración (minutos):</label>
+                            <input type="number" id="exercise-duration" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Calorías por minuto:</label>
+                            <input type="number" id="exercise-calories" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Equipamiento necesario (separado por comas):</label>
+                        <input type="text" id="exercise-equipment" placeholder="Ej: mancuernas, barra, banco">
+                    </div>
+                    <div class="form-group">
+                        <label>Instrucciones (una por línea):</label>
+                        <textarea id="exercise-instructions" rows="4" placeholder="Cada instrucción en una línea"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideExerciseForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <h3>Filtros</h3>
+                <div class="filter-row">
+                    <select id="filter-type">
+                        <option value="">Todos los tipos</option>
+                        <option value="strength">Fuerza</option>
+                        <option value="cardio">Cardio</option>
+                        <option value="flexibility">Flexibilidad</option>
+                        <option value="balance">Equilibrio</option>
+                        <option value="sports">Deportes</option>
+                    </select>
+                    <select id="filter-difficulty">
+                        <option value="">Todas las dificultades</option>
+                        <option value="beginner">Principiante</option>
+                        <option value="intermediate">Intermedio</option>
+                        <option value="advanced">Avanzado</option>
+                    </select>
+                    <select id="filter-muscle">
+                        <option value="">Todos los grupos</option>
+                        <option value="chest">Pecho</option>
+                        <option value="back">Espalda</option>
+                        <option value="shoulders">Hombros</option>
+                        <option value="arms">Brazos</option>
+                        <option value="legs">Piernas</option>
+                        <option value="core">Core</option>
+                        <option value="full_body">Cuerpo Completo</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="loadExercises()">🔍 Filtrar</button>
+                </div>
+            </div>
+
+            <!-- Lista de Ejercicios -->
+            <div id="exercises-list" class="cards-container"></div>
+        </section>
+
+        <!-- Sección de Rutinas -->
+        <section id="routines" class="tab-content">
+            <div class="section-header">
+                <h2>🏃 Gestión de Rutinas</h2>
+                <button class="btn btn-primary" onclick="showRoutineForm()">➕ Nueva Rutina</button>
+            </div>
+
+            <div id="routine-form" class="form-container" style="display: none;">
+                <h3>Crear Nueva Rutina</h3>
+                <form id="routine-form-element" onsubmit="handleRoutineSubmit(event)">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" id="routine-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción:</label>
+                        <textarea id="routine-description" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Dificultad:</label>
+                            <select id="routine-difficulty" required>
+                                <option value="beginner">Principiante</option>
+                                <option value="intermediate">Intermedio</option>
+                                <option value="advanced">Avanzado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Duración estimada (minutos):</label>
+                            <input type="number" id="routine-duration" required min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Grupos Musculares Objetivo:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" value="chest"> Pecho</label>
+                            <label><input type="checkbox" value="back"> Espalda</label>
+                            <label><input type="checkbox" value="shoulders"> Hombros</label>
+                            <label><input type="checkbox" value="arms"> Brazos</label>
+                            <label><input type="checkbox" value="legs"> Piernas</label>
+                            <label><input type="checkbox" value="core"> Core</label>
+                            <label><input type="checkbox" value="full_body"> Cuerpo Completo</label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideRoutineForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="routines-list" class="cards-container"></div>
+        </section>
+
+        <!-- Sección de Usuarios -->
+        <section id="users" class="tab-content">
+            <div class="section-header">
+                <h2>👤 Gestión de Usuarios</h2>
+                <button class="btn btn-primary" onclick="showUserForm()">➕ Nuevo Usuario</button>
+            </div>
+
+            <div id="user-form" class="form-container" style="display: none;">
+                <h3>Registrar Nuevo Usuario</h3>
+                <form id="user-form-element" onsubmit="handleUserSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Usuario:</label>
+                            <input type="text" id="user-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="user-email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Edad:</label>
+                            <input type="number" id="user-age" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Peso (kg):</label>
+                            <input type="number" id="user-weight" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Altura (cm):</label>
+                            <input type="number" id="user-height" step="0.1" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nivel de Fitness:</label>
+                        <select id="user-fitness-level" required>
+                            <option value="beginner">Principiante</option>
+                            <option value="intermediate">Intermedio</option>
+                            <option value="advanced">Avanzado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Objetivos (separados por comas):</label>
+                        <input type="text" id="user-goals" placeholder="Ej: perder peso, ganar músculo">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideUserForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="users-list" class="cards-container"></div>
+        </section>
+
+        <!-- Sección de Sesiones -->
+        <section id="sessions" class="tab-content">
+            <div class="section-header">
+                <h2>🏋️ Sesiones de Entrenamiento</h2>
+                <button class="btn btn-primary" onclick="showSessionForm()">➕ Nueva Sesión</button>
+            </div>
+
+            <div id="session-form" class="form-container" style="display: none;">
+                <h3>Iniciar Nueva Sesión</h3>
+                <form id="session-form-element" onsubmit="handleSessionSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Usuario ID:</label>
+                            <input type="number" id="session-user-id" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Rutina ID:</label>
+                            <input type="number" id="session-routine-id" required min="1">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideSessionForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="sessions-list" class="cards-container"></div>
+        </section>
+
+        <!-- Sección de Progreso -->
+        <section id="progress" class="tab-content">
+            <div class="section-header">
+                <h2>📈 Progreso del Usuario</h2>
+                <button class="btn btn-primary" onclick="showProgressForm()">➕ Registrar Progreso</button>
+            </div>
+
+            <div id="progress-form" class="form-container" style="display: none;">
+                <h3>Registrar Progreso</h3>
+                <form id="progress-form-element" onsubmit="handleProgressSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Usuario ID:</label>
+                            <input type="number" id="progress-user-id" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Ejercicio ID:</label>
+                            <input type="number" id="progress-exercise-id" required min="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Peso (kg):</label>
+                            <input type="number" id="progress-weight" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Repeticiones:</label>
+                            <input type="number" id="progress-reps" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Series:</label>
+                            <input type="number" id="progress-sets" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Duración (minutos):</label>
+                            <input type="number" id="progress-duration" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="progress-record"> ¿Récord personal?
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideProgressForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="progress-list" class="cards-container"></div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
