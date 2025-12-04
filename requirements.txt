@@ -2,4 +2,6 @@ fastapi
 pytest
 uvicorn
 httpx
+supabase
+python-dotenv
 
