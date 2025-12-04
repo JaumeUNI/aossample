@@ -1,5 +1,5 @@
-// API Base URL
-const API_BASE_URL = 'http://127.0.0.1:8000';
+// API Base URL - Auto-detect based on environment
+const API_BASE_URL = window.location.origin;
 
 // ========== TAB NAVIGATION ==========
 document.addEventListener('DOMContentLoaded', function() {

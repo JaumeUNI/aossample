@@ -1,14 +1,14 @@
 import sys
-import os
 from pathlib import Path
 
-# Get the project root directory (parent of api/)
+# Add project root to Python path
 project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
-# Import the FastAPI app
+# Import FastAPI app
 from app.main import app
 
-# Vercel will use this app object
-__all__ = ["app"]
+# Vercel requires the app to be accessible
+# This is the handler that Vercel will use
 
