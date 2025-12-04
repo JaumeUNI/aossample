@@ -26,14 +26,27 @@ aossample/
 │   ├── models/
 │   │   ├── __init__.py       
 │   │   └── item.py           # Define los modelos de datos usando Pydantic
+│   ├── db/
+│   │   ├── __init__.py       # Inicializa el módulo de base de datos
+│   │   └── supabase_client.py # Cliente de Supabase configurado
 │   ├── test/
 │   │   ├── __init__.py       
 │   │   └── test_sample.py    # Contiene las pruebas unitarias para la API
-│   └── requirements.txt      # Dependencias del proyecto
+│
+├── api/                      # Configuración para Vercel
+│   └── index.py             # Handler para Vercel
 │
 ├── venv/                     # Entorno virtual de Python
+├── .env                      # Variables de entorno (no se sube a Git)
+├── .env.example              # Plantilla de variables de entorno
+├── .gitignore                # Archivos ignorados por Git
+├── requirements.txt          # Dependencias del proyecto
+├── supabase_schema.sql       # Script SQL para crear tablas en Supabase
+├── index.html                # Interfaz web de la aplicación
+├── app.js                    # JavaScript del frontend
+├── styles.css                # Estilos CSS
+├── vercel.json               # Configuración de Vercel
 ├── README.md                 # Documentación del proyecto
-├── CAMBIOS_REALIZADOS.md     # Documentación de cambios implementados
 └── GUIA_EJECUCION_RAPIDA.md  # Guía de ejecución rápida
 ```
 
@@ -69,12 +82,34 @@ venv\Scripts\activate
 Una vez que el entorno virtual esté activado, instala las dependencias del proyecto usando `requirements.txt`.
 
 ```bash
-pip install -r app/requirements.txt
+pip install -r requirements.txt
 ```
 
-Esto instalará todos los paquetes necesarios como FastAPI, Uvicorn y Pytest.
+Esto instalará todos los paquetes necesarios como FastAPI, Uvicorn, Supabase y Pytest.
 
-### 4. **Ejecutar la Aplicación FastAPI**
+### 4. **Configurar Supabase**
+
+Este proyecto utiliza Supabase como base de datos. Necesitas configurar las variables de entorno:
+
+1. Copia el archivo `.env.example` a `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edita el archivo `.env` y agrega tus credenciales de Supabase:
+   ```
+   SUPABASE_URL=https://tu-project-id.supabase.co
+   SUPABASE_KEY=tu-api-key-secreta
+   ```
+
+3. Crea las tablas en Supabase:
+   - Ve a tu proyecto en Supabase Dashboard
+   - Navega a **SQL Editor**
+   - Ejecuta el script SQL del archivo `supabase_schema.sql`
+
+**Importante**: El archivo `.env` está en `.gitignore` y no se subirá al repositorio para mantener tus credenciales seguras.
+
+### 5. **Ejecutar la Aplicación FastAPI**
 
 Para ejecutar la aplicación FastAPI, usa el siguiente comando:
 
@@ -87,8 +122,9 @@ La opción `--reload` es útil en modo de desarrollo porque recarga la aplicaci�
 Por defecto, la aplicación estará disponible en `http://127.0.0.1:8000`. Puedes acceder a la documentación de la API a través de:
 - **Swagger UI**: `http://127.0.0.1:8000/docs`
 - **ReDoc**: `http://127.0.0.1:8000/redoc`
+- **Interfaz Web**: `http://127.0.0.1:8000/` (interfaz gráfica completa)
 
-### 5. **Probar la API con `pytest`**
+### 6. **Probar la API con `pytest`**
 
 Las pruebas unitarias para la API están incluidas en el archivo `app/test/test_sample.py`. Puedes ejecutar las pruebas usando `pytest`.
 
@@ -233,7 +269,7 @@ python -m pytest
 Para generar un archivo `requirements.txt` después de agregar nuevas dependencias:
 
 ```bash
-pip freeze > app/requirements.txt
+pip freeze > requirements.txt
 ```
 
 ### Ejecutar Pruebas Específicas

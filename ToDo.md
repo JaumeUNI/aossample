@@ -1,1 +1,0 @@
-Create cloud infrastructure for database (AWS/Supabase)

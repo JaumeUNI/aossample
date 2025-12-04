@@ -11,9 +11,27 @@ cd C:\Users\jejej\OneDrive\Escritorio\github_projects\aossample
 # Activar el entorno virtual
 venv\Scripts\activate
 
+# Instalar dependencias (si no están instaladas)
+pip install -r requirements.txt
+
 # Verificar que las dependencias estén instaladas
 pip list | findstr fastapi
 ```
+
+### 1.1. Configurar Supabase
+
+```bash
+# Copiar el archivo de ejemplo de variables de entorno
+copy .env.example .env
+
+# Editar .env y agregar tus credenciales de Supabase
+# SUPABASE_URL=https://tu-project-id.supabase.co
+# SUPABASE_KEY=tu-api-key-secreta
+```
+
+**Importante**: 
+- Crea las tablas en Supabase ejecutando el script `supabase_schema.sql` en el SQL Editor de Supabase
+- El archivo `.env` contiene credenciales sensibles y no se sube a Git
 
 ### 2. Ejecutar el Servidor
 
@@ -294,8 +312,23 @@ uvicorn app.main:app --reload --port 8001
 venv\Scripts\activate
 
 # Reinstalar dependencias
-pip install -r app/requirements.txt
+pip install -r requirements.txt
 ```
+
+### Error: Variables de Entorno no Configuradas
+```bash
+# Verificar que el archivo .env existe
+dir .env
+
+# Si no existe, copiar desde el ejemplo
+copy .env.example .env
+
+# Editar .env y agregar las credenciales de Supabase
+```
+
+### Error: Tablas no Existen en Supabase
+- Ve al SQL Editor en tu proyecto de Supabase
+- Ejecuta el script `supabase_schema.sql` para crear todas las tablas necesarias
 
 ### Error: Pruebas Fallan
 ```bash
@@ -328,14 +361,17 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8000/routines" -Method GET
 
 ## 🎯 Próximos Pasos
 
-1. **Explorar la Documentación**: Visita http://127.0.0.1:8000/docs
-2. **Ejecutar Pruebas**: Verifica que todo funciona correctamente
-3. **Experimentar con la API**: Prueba diferentes funcionalidades de fitness
-4. **Revisar Código**: Explora la implementación en `app/routes/sample.py`
+1. **Configurar Supabase**: Asegúrate de tener las tablas creadas y las credenciales en `.env`
+2. **Explorar la Documentación**: Visita http://127.0.0.1:8000/docs
+3. **Usar la Interfaz Web**: Accede a http://127.0.0.1:8000/ para la interfaz gráfica completa
+4. **Ejecutar Pruebas**: Verifica que todo funciona correctamente
+5. **Experimentar con la API**: Prueba diferentes funcionalidades de fitness
+6. **Revisar Código**: Explora la implementación en `app/routes/sample.py`
 
 ## 📚 Recursos Adicionales
 
 - **Documentación FastAPI**: https://fastapi.tiangolo.com/
+- **Documentación Supabase**: https://supabase.com/docs
 - **Documentación Pydantic**: https://pydantic-docs.helpmanual.io/
 - **Documentación pytest**: https://docs.pytest.org/
 
